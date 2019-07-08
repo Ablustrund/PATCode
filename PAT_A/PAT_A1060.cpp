@@ -25,7 +25,7 @@ string deal(string s, int &e)
              += k;
             s.erase(k, 1);
         }
-        /* while(k < s.length() && s[k] != '.')
+/*         while(k < s.length() && s[k] != '.')
         {
             k++; //寻找小数点的下标
             e++;
