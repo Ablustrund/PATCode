@@ -22,10 +22,11 @@ void finePrimeFactors(long int N)
         {
             primeFactors[primeNums].prime = i;
             primeFactors[primeNums].num++;
-            N = N / i;
+            N /= i;
             while(N % i == 0)
             {
                 primeFactors[primeNums].num++;
+                N /= i;
             }
             primeNums++;
         }
@@ -41,11 +42,17 @@ void finePrimeFactors(long int N)
 int main()
 {
     scanf("%ld", &N);
+    if(N == 1)
+    {
+        printf("1=1\n");
+        return 0;
+    }
     finePrimeFactors(N);
     printf("%ld=", N);
     for (int i = 0; i < primeNums; i++)
     {
-        printf("%d^%d", primeFactors[i].prime, primeFactors[i].num);
+        if(primeFactors[i].num != 1) printf("%d^%d", primeFactors[i].prime, primeFactors[i].num);
+        else printf("%d", primeFactors[i].prime);
         if(i != primeNums - 1) printf("*");
         else printf("\n");
     }
