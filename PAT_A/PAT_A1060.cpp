@@ -18,12 +18,19 @@ string deal(string s, int &e)
     }
     else
     {
-        while(k < s.length() && s[k] != '.')
+        if(s.find(".") == string::npos) e += s.length();
+        else
+        {
+            k =  s.find(".");
+             += k;
+            s.erase(k, 1);
+        }
+        /* while(k < s.length() && s[k] != '.')
         {
             k++; //寻找小数点的下标
             e++;
         }
-        if(k < s.length()) s.erase(s.begin() + k); //把小数点删掉，如果k == s.length()说明是整数没有小数点
+        if(k < s.length()) s.erase(s.begin() + k); //把小数点删掉，如果k == s.length()说明是整数没有小数点 */
     }
     if(s.length() == 0) e = 0;
     int num = 0;
