@@ -22,7 +22,7 @@ string deal(string s, int &e)
         else
         {
             k =  s.find(".");
-             += k;
+            e += k;
             s.erase(k, 1);
         }
 /*         while(k < s.length() && s[k] != '.')
