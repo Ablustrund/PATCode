@@ -15,7 +15,8 @@ int primeNums = 0;
 
 void finePrimeFactors(long int N)
 {
-    for (int i = 2; i <= sqrt(1.0 * N); i++)
+    int m = sqrt(1.0 * N);
+    for (int i = 2; i <= m; i++)
     {
         if(N % i == 0)
         {
