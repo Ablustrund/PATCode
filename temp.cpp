@@ -4,6 +4,7 @@
 #include <algorithm>
 using namespace std;
 int n, tempNum, maxCount = 0, maxNum = 0;
+// TLE 70 grades
 vector<pair<int, int>> nums;
 vector<int> flag;
 bool tag[500000000] = {false};
