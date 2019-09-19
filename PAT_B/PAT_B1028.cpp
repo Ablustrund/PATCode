@@ -6,23 +6,20 @@ string strName, strDate;
 struct valNode
 {
     string name;
-    int year, month, day;
-    valNode(string _name, int _year, int _month, int _day)
+    string date;
+    valNode(string _name, string _date)
     {
         name = _name;
-        year = _year;
-        month = _month;
-        day = _day;
+        date = _date;
     }
 };
-stringstream ss;
+string upp = "2014/09/06";
+string downn = "1814/09/06";
 int valCount = 0;
 vector<valNode> peoples;
 bool cmp(valNode a, valNode b)
 {
-    if(a.year != b.year) return a.year < b.year;
-    if(a.month != b.month) return a.month < b.month;
-    return a.day < b.day;
+    if(a.date != b.date) return a.date < b.date;
 }
 int main()
 {
@@ -30,29 +27,9 @@ int main()
     for(int i = 0; i < n; i++)
     {
         cin >> strName >> strDate;
-        int tempYear, tempMon, tempDay;
-        int pos1 = strDate.find("/");
-        string temp = strDate.substr(0, pos1);
-        strDate.erase(0, pos1+1);
-        ss.str("");
-        ss.clear();
-        ss << temp;
-        ss >> tempYear;
-        pos1 = strDate.find("/");
-        temp = strDate.substr(0, pos1);
-        strDate.erase(0, pos1+1);
-        ss.str("");
-        ss.clear();
-        ss << temp;
-        ss >> tempMon;
-        ss.str("");
-        ss.clear();
-        ss << strDate;
-        ss >> tempDay;
-        if(tempYear < 1814 || (tempYear == 1814 && tempMon < 9) || (tempYear == 1814 && tempMon == 9 && tempDay < 6)) continue;
-        if(tempYear > 2014 || (tempYear == 2014 && tempMon > 9) || (tempYear == 2014 && tempMon == 9 && tempDay > 6)) continue;
+        if(strDate < downn || strDate > upp) continue;
         valCount++;
-        peoples.push_back(valNode(strName, tempYear, tempMon, tempDay));
+        peoples.push_back(valNode(strName, strDate));
     }
     sort(peoples.begin(), peoples.end(), cmp);
     if(valCount == 0) printf("0\n");
