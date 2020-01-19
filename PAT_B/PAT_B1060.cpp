@@ -17,23 +17,9 @@ int main()
     }
     sort(vec.begin(), vec.end(), CMP);
     int i = 1;
-    if(vec[n - 1] > n)
+    for(i = 1; i <= n; i++)
     {
-        printf("%d\n", n);
-        return 0;
-    }
-    for (i = 1; i <= n; i++)
-    {
-        int Tag = true;
-        for(int j = 0; j < i; j++)
-        {
-            if(vec[j] <= i)
-            {
-                Tag = false;
-                break;
-            }
-        }
-        if(Tag == false) break;
+        if(vec[i - 1] <= i) break;
     }
     printf("%d\n", i - 1);
     return 0;
