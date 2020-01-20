@@ -1,65 +1,54 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, k, tempValue;
-string firstAddr, tempAddr, tempNext;
+int beginAddr, nums, k, temp1, temp2, temp3;
+unordered_map<int, pair<int, int>> nodeMap;//addr -> <index, addr>
 struct node
 {
-    string nowAddr;
-    int value;
-    string nextAddr;
-    node(string _nowAddr = "", int _value = 0, string _nextAddr = "")
-    {
-        nowAddr = _nowAddr;
-        value = _value;
-        nextAddr = _nextAddr;
-    }
+    int index, addr;
+    node(int _addr, int _index) {addr = _addr; index = _index; }
 };
-map<string, node> link;
-vector<string> nodeAddr;
+vector<node> vec;
 int main()
 {
-    cin >> firstAddr >> n >> k;
-    for(int i = 0; i < n; i++)
+    scanf("%d%d%d", &beginAddr, &nums, &k);
+    for (int i = 0; i < nums; i++)
     {
-        cin >> tempAddr >> tempValue >> tempNext;
-        link[tempAddr] = node(tempAddr, tempValue, tempNext);
+        scanf("%d%d%d", &temp1, &temp2, &temp3);
+        nodeMap[temp1] = make_pair(temp2, temp3);
     }
-    for (int i = 0; i < n; i++)
+    while(beginAddr != -1)
     {
-        if(i && i % k == 0)
+        vec.push_back(node(beginAddr, nodeMap[beginAddr].first));
+        beginAddr = nodeMap[beginAddr].second;
+    }
+    for (int i = 0; i < vec.size() / k; i++)
+    {
+        int bias = i * k;
+        for (int j = k - 1; j >= 1; j--)
         {
-            for (int j = k - 1; j >= 0; j--)
-            {
-                if(j == 0) cout << nodeAddr[j] << " " << link[nodeAddr[j]].value << " " << link[nodeAddr[k-1]].nextAddr << endl;
-                else
-                {
-                    cout << nodeAddr[j] << " " << link[nodeAddr[j]].value << " " << link[nodeAddr[j-1]].nowAddr << endl;
-                }
-            }
-            nodeAddr.clear();
+            printf("%05d %d %05d\n", vec[j+bias].addr, vec[j+bias].index, vec[j+bias - 1].addr);
         }
-        nodeAddr.push_back(firstAddr);
-        firstAddr = link[firstAddr].nextAddr;
-    }
-    if (nodeAddr.size() == k)
-    {
-        for (int j = k - 1; j >= 0; j--)
+        if(i+1 == vec.size()/k)//此时处理的是最后一整块
         {
-            if (j == 0)
-                cout << nodeAddr[j] << " " << link[nodeAddr[j]].value << " " << link[nodeAddr[k - 1]].nextAddr << endl;
+            if(vec.size() % k == 0)
+            {
+                printf("%05d %d -1\n", vec[bias].addr, vec[bias].index);
+            }
             else
             {
-                cout << nodeAddr[j] << " " << link[nodeAddr[j]].value << " " << link[nodeAddr[j - 1]].nowAddr << endl;
+                printf("%05d %d %05d\n", vec[bias+0].addr, vec[bias+0].index, vec[bias+k].addr);
+                for (int j = bias + k; j < vec.size() - 1; j++)
+                {
+                    printf("%05d %d %05d\n", vec[j].addr, vec[j].index, vec[j+1].addr);
+                }
+                printf("%05d %d -1\n", vec[vec.size()-1].addr, vec[vec.size()-1].index);
             }
         }
-    }
-    else if(nodeAddr.size() != 0)
-    {
-        for(int i = 0; i < nodeAddr.size(); i++)
+        else
         {
-            cout << nodeAddr[i] << " " << link[nodeAddr[i]].value << " " << link[nodeAddr[i]].nextAddr << endl;
+            printf("%05d %d %05d\n", vec[bias].addr, vec[bias].index, vec[bias+2*k - 1].addr);
         }
     }
-        return 0;
+    return 0;
 }
