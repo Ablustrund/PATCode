@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-//通用方法：先存，然后按链表存放在vector中，然后处理。这个的处理方式位分为三个vector，然后合并。
+// 通用方法：先存，然后按链表存放在vector中，然后处理。这个的处理方式位分为三个vector，然后合并。
 int beginAddr, n, k, temp1, temp2, temp3;
 map<int, pair<int, int>> originNode;//addr:<index, nextAddr>
 struct node
