@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+//对于map的value使用struct构造函数要赋初值, 但是vector就不用。。就很迷
 int p, m, n, tempScore;
 string tempStr;
 struct stu
