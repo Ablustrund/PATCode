@@ -1,77 +1,58 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-struct Number
+#include <stdio.h>
+typedef struct frac_{long n, d, s;} FC;
+// 求最大公约数的函数
+long gcd(long a, long b) {return b == 0 ? a : gcd(b, a % b);}
+// 分数处理函数
+FC hand(FC a)
 {
-    int fenzi, fenmu;
-    bool symbol;
-    Number(int _fenzi = 0, int _fenmu = 0, bool _symbol = 0)
-    {
-        fenzi = _fenzi;
-        fenmu = _fenmu;
-        symbol = _symbol;
-    }
-} a, b;
-
-int stringToInt(string str)
-{
-    int sum = 0;
-    int k = 1;
-    for (int i = str.size() - 1; i >= 0; i--)
-    {
-        sum += k * (str[i] - '0');
-        k *= 10;
-    }
-    return sum;
+    if (a.n < 0) {a.s *= -1; a.n *= -1;} // 如果分子为负，将符号赋给符号变量，分子取正值
+    long tmp = gcd(a.n, a.d);
+    a.n /= tmp;
+    a.d /= tmp; // 约分
+    return a;
 }
-
-int gy(int a, int b)
+// 单个分数输出函数
+void prt_fc(FC a)
 {
-    int t;
-    if (a < b)
-        t = a, a = b, b = t;
-    if (b == 0)
-        return a;
-    t = a % b;
-    while (t != 0)
-    {
-        a = b;
-        b = t;
-        t = a % b;
+    if (a.d == 0)
+        printf("Inf"); // 如果分母为0，输出Inf
+    else {
+        long i = a.n / a.d; // 提取整数部分
+        a.n = a.n % a.d; // 分数化为真分数
+        a = hand(a); // 约分
+        if (a.n == 0 && i == 0) printf("0"); // 如果整数小数部分均为0，输出0
+        else {
+            if (a.s == -1) printf("(-"); // 如果符号为负，则添加括号和负号
+            if (i != 0) printf("%ld", i);
+            if (i != 0 && a.n != 0) printf(" ");
+            if (a.n != 0) printf("%ld/%ld", a.n, a.d);
+            if (a.s == -1) printf(")");
+        }
     }
-    return b;
 }
-
+// 算式输出函数
+void prt_eq(FC a, FC b, char c, FC (*fig)(FC, FC))
+{
+    prt_fc(a);
+    printf(" %c ", c);
+    prt_fc(b);
+    printf(" = ");
+    prt_fc(hand((*fig)(a, b)));
+    printf("\n");
+}
+// 计算函数，加减乘除
+FC plus (FC a, FC b) {return (FC){a.s*a.n*b.d + b.s*b.n*a.d, a.d*b.d, 1};}
+FC sub  (FC a, FC b) {return (FC){a.s*a.n*b.d - b.s*b.n*a.d, a.d*b.d, 1};}
+FC multi(FC a, FC b) {return (FC){a.n*b.n, a.d*b.d, a.s*b.s};}
+FC divis(FC a, FC b) {return (FC){a.n*b.d, a.d*b.n, a.s*b.s};}
 int main()
 {
-    string str1, str2;
-    cin >> str1 >> str2;
-    if (str1[0] == '-')
-    {
-        a.symbol = 1;
-        str1.erase(0, 1);
-    }
-    int pos1 = str1.find("/");
-    string tempStr = str1.substr(0, pos1);
-    a.fenzi = stringToInt(tempStr);
-    str1.erase(0, pos1 + 1);
-    a.fenmu = stringToInt(str1);
-    if (str2[0] == '-')
-    {
-        b.symbol = 1;
-        str2.erase(0, 1);
-    }
-    pos1 = str2.find("/");
-    tempStr = str2.substr(0, pos1);
-    b.fenzi = stringToInt(tempStr);
-    str2.erase(0, pos1 + 1);
-    b.fenmu = stringToInt(str2);
-    int m = gy(a.fenmu, b.fenmu);//最大公因数
-    int n = a.fenmu * b.fenmu / m;//最小公倍数
-    a.fenzi *= (n / a.fenmu);
-    b.fenzi *= (n / b.fenmu);
-    a.fenmu = b.fenmu = n;
-    cout << a.symbol << " " << a.fenzi << " " << a.fenmu << " " << b.symbol << " " << b.fenzi << " " << b.fenmu << endl;
+    FC a = {0, 0, 1}, b = {0, 0, 1}, (*fig[])(FC, FC) = {plus, sub, multi, divis};
+    char c[5] = "+-*/";
+
+    scanf("%ld/%ld %ld/%ld", &a.n, &a.d, &b.n, &b.d); // 读取分数a、b
+    for (int i = 0; i < 4; i++)
+        prt_eq(hand(a), hand(b), c[i], fig[i]); // 将处理过的分数，计算符号，计算函数、传递给算式输出函数
 
     return 0;
 }
