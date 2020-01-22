@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 int a = 1000000, b = 23428;
 int gcd(int a, int b)
 {
