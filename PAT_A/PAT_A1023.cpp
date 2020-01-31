@@ -1,39 +1,30 @@
-#include <stdio.h>
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
-
-struct Node
+set<char> set1, set2;
+string doubleIt(string str)
 {
-    char data;
-    int next;
-    bool flag = false;
-} node[100010];
-
+    string res = "";
+    int carryNum = 0, tempNum;
+    for (int i = str.size() - 1; i >= 0; i--)
+    {
+        tempNum = 2 * (str[i] - '0') + carryNum;
+        res.insert(res.begin(), '0' + (tempNum) % 10);
+        carryNum = tempNum / 10;
+    }
+    if(carryNum != 0) res.insert(res.begin(), '0' + carryNum);
+    return res;
+}
 int main()
 {
-    int word1, word2, nodeNum;
-    int tempAddr, tempNextAddr;
-    char tempWord;
-    scanf("%d%d%d", &word1, &word2, &nodeNum);
-    for (int i = 0; i < nodeNum; i++)
+    string str1;
+    cin >> str1;
+    string str2 = doubleIt(str1);
+    if(str1.size() != str2.size()) printf("No\n");
+    else
     {
-        scanf("%d %c %d", &tempAddr, &tempWord, &tempNextAddr);
-        node[tempAddr].data = tempWord;
-        node[tempAddr].next = tempNextAddr;
+        for (int i = 0; i < str1.size(); i++) {set1.insert(str1[i]); set2.insert(str2[i]);}
+        if(set1 != set2) printf("No\n"); else printf("Yes\n");
     }
-    int p = 0;
-    for(p = word1; p != -1; p = node[p].next)
-    {
-        node[p].flag = true;
-    }
-    for (p = word2; p != -1; p = node[p].next)
-    {
-        if(node[p].flag == true)
-        {
-            printf("%05d\n", p);
-            return 0;
-        }
-    }
-    printf("-1\n");
+    printf("%s\n", str2.c_str());
     return 0;
 }
