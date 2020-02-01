@@ -1,111 +1,53 @@
-#include <stdio.h>
-#include <vector>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
-
-int n;
-vector<int> inputArray;
-vector<int> pre;
-vector<int> preRe;
-vector<int> post;
-struct Node
+int n, temp;
+vector<int> preOrder, inOrder, res;
+bool cmp(const int &a, const int &b) { return a > b; }
+bool succ, firstPrint = true;
+struct node
 {
-    int key;
-    struct Node *leftChild = NULL;
-    struct Node *rightChild = NULL;
-} node;
-
-void insertBTree(struct Node *&root, int tempKey)
+    int data = 0;
+    struct node *left = NULL, *right = NULL;
+};
+struct node *createTree(int preLeft, int preRight, int inLeft, int inRight, int tag)
 {
-    if(root == NULL)
-    {
-        root = new struct Node;
-        root->key = tempKey;
-        root->leftChild = root->rightChild = NULL;
-    }
-    else
-    {
-        if(tempKey < root->key) insertBTree(root->leftChild, tempKey);
-        else insertBTree(root->rightChild, tempKey);
-    }
+    if(preLeft > preRight) return NULL;
+    struct node *temp = new node;
+    temp->data = preOrder[preLeft];
+    int k = inLeft;
+    if(tag == 1){ for (k = inLeft; k <= inRight; k++) if(inOrder[k] == preOrder[preLeft]) break;}
+    else{for (k = inRight; k >= inLeft; k--) if(inOrder[k] == preOrder[preLeft]) break;}
+    if((tag == 1 && k > inRight) || (tag == 2 && k < inLeft)){succ = false; return NULL; }
+    temp->left = createTree(preLeft + 1, preLeft + k - inLeft, inLeft, k - 1, tag);
+    temp->right = createTree(preLeft + k - inLeft + 1, preRight, k + 1, inRight, tag);
+    return temp;
 }
-
-void insertBTreeRe(struct Node *&root, int tempKey)
+void postPrint(struct node *u)
 {
-    if(root == NULL)
-    {
-        root = new struct Node;
-        root->key = tempKey;
-        root->leftChild = root->rightChild = NULL;
-    }
-    else
-    {
-        if(tempKey >= root->key) insertBTreeRe(root->leftChild, tempKey);
-        else insertBTreeRe(root->rightChild, tempKey);
-    }
+    if(u == NULL) return;
+    if(u->left != NULL) postPrint(u->left);
+    if(u->right != NULL) postPrint(u->right);
+    if(firstPrint) {printf("%d", u->data); firstPrint = false;}
+    else printf(" %d", u->data);
 }
-
-void preOrder(struct Node *root, int flag)
-{
-    if(root == NULL) return;
-    if(flag == 1) pre.push_back(root->key);
-    else
-    {
-        preRe.push_back(root->key);
-        //printf("%d\n", root->key);
-    }
-    if(root->leftChild != NULL) preOrder(root->leftChild, flag == 1?1:2);
-    if(root->rightChild != NULL) preOrder(root->rightChild, flag == 1?1:2);
-}
-/* int count = 0; */
-void postOrder(struct Node *root)
-{
-    if(root == NULL) return;
-    if(root->leftChild != NULL) postOrder(root->leftChild);
-    if(root->rightChild != NULL) postOrder(root->rightChild);
-    post.push_back(root->key);
-}
-
 int main()
 {
-    struct Node *root = NULL;
-    struct Node *rootReverse = NULL;
     scanf("%d", &n);
-    int temp;
-    for (int i = 0; i < n; i++)
-    {
-        scanf("%d", &temp);
-        inputArray.push_back(temp);
-        insertBTree(root, temp);
-        insertBTreeRe(rootReverse, temp);
-    }
-    preOrder(root, 1);
-    preOrder(rootReverse, 2);
-/*     for (int i = 0; i < pre.size(); i++)
-    {
-        printf("%d", pre[i]);
-        if(i != pre.size() - 1) printf(" ");
-        else printf("\n");
-    }
-    for (int i = 0; i < preRe.size(); i++)
-    {
-        printf("%d", preRe[i]);
-        if(i != preRe.size() - 1) printf(" ");
-        else printf("\n");
-    } */
-
-    if(inputArray != pre && inputArray != preRe) printf("NO\n");
+    for (int i = 0; i < n; i++) {scanf("%d", &temp); preOrder.push_back(temp); }
+    inOrder = preOrder;
+    sort(inOrder.begin(), inOrder.end());
+    struct node *root1 = new node;
+    succ = true;
+    root1 = createTree(0, n - 1, 0, n - 1, 1);
+    if(succ) {printf("YES\n"); postPrint(root1);}
     else
     {
-        if(inputArray == pre) postOrder(root);
-        else postOrder(rootReverse);
-        printf("YES\n");
-        for (int i = 0; i < post.size(); i++)
-        {
-            printf("%d", post[i]);
-            if(i != post.size() - 1) printf(" ");
-            else printf("\n");
-        }
-    } 
+        sort(inOrder.begin(), inOrder.end(), cmp);
+        struct node *root2 = new node;
+        succ = true;
+        root2 = createTree(0, n - 1, 0, n - 1, 2);
+        if(succ == true) {printf("YES\n"); postPrint(root2);}
+        else printf("NO\n");
+    }
     return 0;
 }
