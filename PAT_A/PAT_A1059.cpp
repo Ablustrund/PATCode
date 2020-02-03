@@ -1,60 +1,36 @@
-#include <algorithm>
-#include <math.h>
-#include <stdio.h>
-
+#include <bits/stdc++.h>
 using namespace std;
-
-struct factor
-{
-    int prime;
-    int num;
-} primeFactors[20];
-
-long int N;
-int primeNums = 0;
-
-void finePrimeFactors(long int N)
-{
-    int m = sqrt(1.0 * N);
-    for (int i = 2; i <= m; i++)
-    {
-        if(N % i == 0)
-        {
-            primeFactors[primeNums].prime = i;
-            primeFactors[primeNums].num++;
-            N /= i;
-            while(N % i == 0)
-            {
-                primeFactors[primeNums].num++;
-                N /= i;
-            }
-            primeNums++;
-        }
-    }
-    if(N != 1)
-    {
-        primeFactors[primeNums].prime = N;
-        primeFactors[primeNums].num++;
-        primeNums++;
-    }
-}
-
+vector<pair<long long int, long long int>> res;
 int main()
 {
-    scanf("%ld", &N);
-    if(N == 1)
+    long long int n;
+    scanf("%lld", &n);
+    double bound = sqrt(n);
+    long long int temp = n;
+    for (long long int i = 2; i <= (int)bound + 1; i++)
     {
-        printf("1=1\n");
-        return 0;
+        if (n % i == 0)
+        {
+            long long int k = 0;
+            while (n % i == 0)
+            {
+                n /= i;
+                k++;
+            }
+            res.push_back(make_pair(i, k));
+        }
     }
-    finePrimeFactors(N);
-    printf("%ld=", N);
-    for (int i = 0; i < primeNums; i++)
+    if(n != 1) res.push_back(make_pair(n, 1));
+    if(temp == n) printf("%d=%d\n", temp, temp);
+    else
     {
-        if(primeFactors[i].num != 1) printf("%d^%d", primeFactors[i].prime, primeFactors[i].num);
-        else printf("%d", primeFactors[i].prime);
-        if(i != primeNums - 1) printf("*");
-        else printf("\n");
+        printf("%d=", temp);
+        for(int i = 0; i < res.size(); i++)
+        {
+            if(i != 0) printf("*");
+            if(res[i].second == 1) printf("%d", res[i].first);
+            else printf("%d^%d", res[i].first, res[i].second);
+        }
     }
     return 0;
 }
