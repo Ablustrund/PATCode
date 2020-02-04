@@ -6,7 +6,7 @@ struct node
     int addr, tdata;
     node(int _addr = 0, int _data = 0){addr = _addr; tdata = _data;}
 };
-unordered_map<int, node> temp;
+struct node temp[100010];
 bool cmp(const node &a, const node &b) { return a.tdata < b.tdata; }
 int main()
 {
