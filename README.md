@@ -1,9 +1,5 @@
-# PATCode
+### exercise notes for PAT and other oj tests
 
-## https://www.patest.cn/
-一个小透明的github, 希望能这个暑假把PAT的乙级和甲级题目刷完，zju加油！
-英语六级加油！！
+1. OJ platform:     https://judger.net/ 晴天的魔法乐园
 
-现在是寒假刷完了(雾)
-
-OJ platform:   https://judger.net/ 晴天的魔法乐园
+2. PAT OJ platform:     https://www.patest.cn/
